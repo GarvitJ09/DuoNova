@@ -1,0 +1,833 @@
+{
+  "info": {
+    "name": "DuoNova ATS Checker - Runtime Configuration API",
+    "description": "Complete API collection for testing runtime configuration changes and resume processing with intelligent selection",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_key",
+      "value": "your-secure-api-key",
+      "type": "string"
+    },
+    {
+      "key": "session_id",
+      "value": "test-session-123",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "📋 Health & Status",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Check if the server is running and healthy"
+          },
+          "response": []
+        },
+        {
+          "name": "API Root Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Get API information and features"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔧 Configuration Management",
+      "item": [
+        {
+          "name": "Get Current Configuration",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/current_config",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "current_config"]
+            },
+            "description": "Get current runtime configuration including environment variables and provider status"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Configuration - Processing Mode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"processing_mode\": \"hybrid\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/update_config",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "update_config"]
+            },
+            "description": "Change processing mode to hybrid (fast, cost-effective)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Configuration - Complete LLM Mode",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"processing_mode\": \"complete_llm\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/update_config",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "update_config"]
+            },
+            "description": "Change processing mode to complete_llm (highest accuracy)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Configuration - Provider Priority",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider_priority\": \"openai,anthropic,groq\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/update_config",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "update_config"]
+            },
+            "description": "Change provider priority order (OpenAI first for accuracy)"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Configuration - Multiple Settings",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"processing_mode\": \"hybrid\",\n  \"provider_priority\": \"groq,openai,anthropic\",\n  \"cost_optimization\": true,\n  \"auto_fallback\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/update_config",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "update_config"]
+            },
+            "description": "Update multiple configuration settings at once"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Current Configuration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/test_config",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "test_config"]
+            },
+            "description": "Test current configuration with sample files and check provider availability"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📋 Configuration Presets",
+      "item": [
+        {
+          "name": "Apply Speed Preset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preset\": \"speed\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/apply_preset",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "apply_preset"]
+            },
+            "description": "Apply speed preset: hybrid mode + Groq priority + cost optimization"
+          },
+          "response": []
+        },
+        {
+          "name": "Apply Accuracy Preset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preset\": \"accuracy\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/apply_preset",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "apply_preset"]
+            },
+            "description": "Apply accuracy preset: complete_llm mode + OpenAI priority + no cost optimization"
+          },
+          "response": []
+        },
+        {
+          "name": "Apply Cost Preset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preset\": \"cost\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/apply_preset",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "apply_preset"]
+            },
+            "description": "Apply cost preset: hybrid mode + cost optimization enabled"
+          },
+          "response": []
+        },
+        {
+          "name": "Apply Development Preset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preset\": \"dev\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/apply_preset",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "apply_preset"]
+            },
+            "description": "Apply development preset: fast iteration settings"
+          },
+          "response": []
+        },
+        {
+          "name": "Apply Production Preset",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"preset\": \"prod\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/apply_preset",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "apply_preset"]
+            },
+            "description": "Apply production preset: complete_llm mode + reliability focus"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🎛️ Session Management",
+      "item": [
+        {
+          "name": "Force Provider - Groq",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "session-id",
+                "value": "{{session_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/force_provider/groq",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "force_provider", "groq"]
+            },
+            "description": "Force Groq provider for current session (overrides configuration)"
+          },
+          "response": []
+        },
+        {
+          "name": "Force Provider - OpenAI",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "session-id",
+                "value": "{{session_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/force_provider/openai",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "force_provider", "openai"]
+            },
+            "description": "Force OpenAI provider for current session"
+          },
+          "response": []
+        },
+        {
+          "name": "Force Provider - Anthropic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "session-id",
+                "value": "{{session_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/force_provider/anthropic",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "force_provider", "anthropic"]
+            },
+            "description": "Force Anthropic provider for current session"
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Session Overrides",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "session-id",
+                "value": "{{session_id}}",
+                "type": "text"
+              },
+              {
+                "key": "X-API-Key",
+                "value": "{{api_key}}",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/v1/admin/clear_session_overrides",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "admin", "clear_session_overrides"]
+            },
+            "description": "Clear all session-specific provider overrides"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📄 Resume Processing",
+      "item": [
+        {
+          "name": "Get Processing Options",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/processing_options",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "processing_options"]
+            },
+            "description": "Get available processing modes and LLM providers with recommendations"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Intelligent Processing Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/intelligent_processing_info",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "intelligent_processing_info"]
+            },
+            "description": "Get information about intelligent processing configuration and how it works"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Processing Switches",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "processing_mode",
+                  "value": "hybrid",
+                  "type": "text"
+                },
+                {
+                  "key": "llm_provider",
+                  "value": "auto",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/test_processing_switches",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "test_processing_switches"]
+            },
+            "description": "Test processing configuration combinations without uploading a file"
+          },
+          "response": []
+        },
+        {
+          "name": "Upload Resume - Intelligent Processing",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "resume",
+                  "type": "file",
+                  "src": "",
+                  "description": "PDF or DOCX resume file"
+                },
+                {
+                  "key": "level",
+                  "value": "mid",
+                  "type": "text",
+                  "description": "entry, mid, or senior"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/upload_resume",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "upload_resume"]
+            },
+            "description": "Upload resume with intelligent automatic processing selection - no manual configuration needed!"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🧪 Testing Workflows",
+      "item": [
+        {
+          "name": "Full Speed Test Workflow",
+          "item": [
+            {
+              "name": "1. Apply Speed Preset",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"preset\": \"speed\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/apply_preset",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "apply_preset"]
+                }
+              }
+            },
+            {
+              "name": "2. Verify Speed Configuration",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/current_config",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "current_config"]
+                }
+              }
+            },
+            {
+              "name": "3. Upload Resume (Speed Mode)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "resume",
+                      "type": "file",
+                      "src": ""
+                    },
+                    {
+                      "key": "level",
+                      "value": "mid",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/upload_resume",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "upload_resume"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Full Accuracy Test Workflow",
+          "item": [
+            {
+              "name": "1. Apply Accuracy Preset",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"preset\": \"accuracy\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/apply_preset",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "apply_preset"]
+                }
+              }
+            },
+            {
+              "name": "2. Verify Accuracy Configuration",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/current_config",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "current_config"]
+                }
+              }
+            },
+            {
+              "name": "3. Upload Resume (Accuracy Mode)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "resume",
+                      "type": "file",
+                      "src": ""
+                    },
+                    {
+                      "key": "level",
+                      "value": "mid",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/upload_resume",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "upload_resume"]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Runtime Configuration Demo",
+          "item": [
+            {
+              "name": "1. Check Initial Status",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/current_config",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "current_config"]
+                }
+              }
+            },
+            {
+              "name": "2. Switch to Hybrid Mode",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"processing_mode\": \"hybrid\",\n  \"provider_priority\": \"groq,openai,anthropic\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/update_config",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "update_config"]
+                }
+              }
+            },
+            {
+              "name": "3. Test Configuration",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/test_config",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "test_config"]
+                }
+              }
+            },
+            {
+              "name": "4. Switch to Complete LLM Mode",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"processing_mode\": \"complete_llm\",\n  \"provider_priority\": \"openai,anthropic,groq\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/update_config",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "update_config"]
+                }
+              }
+            },
+            {
+              "name": "5. Verify Final Configuration",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/admin/current_config",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "v1", "admin", "current_config"]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set dynamic timestamp for requests",
+          "pm.environment.set('timestamp', new Date().toISOString());"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script for all requests",
+          "pm.test('Response time is reasonable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(30000);",
+          "});",
+          "",
+          "pm.test('Response has correct content type', function () {",
+          "    if (pm.response.headers.get('Content-Type')) {",
+          "        pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "    }",
+          "});",
+          "",
+          "// Log response for debugging",
+          "if (pm.response.code >= 400) {",
+          "    console.log('Error Response:', pm.response.text());",
+          "}"
+        ]
+      }
+    }
+  ]
+}
