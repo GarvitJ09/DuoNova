@@ -1,6 +1,6 @@
 import io
-from typing import Union
-import PyPDF2
+from typing import Union  
+import pdfplumber
 import docx
 
 class FileExtractionService:
@@ -18,12 +18,25 @@ class FileExtractionService:
 
     @staticmethod
     def _extract_pdf(file_bytes: bytes) -> str:
-        pdf = PyPDF2.PdfReader(io.BytesIO(file_bytes))
-        text = "\n".join(page.extract_text() or "" for page in pdf.pages)
-        return text
+        text_parts = []
+        with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
+            for page in pdf.pages:
+                text_parts.append(page.extract_text() or "")
+        return "\n".join(text_parts)
 
     @staticmethod
     def _extract_docx(file_bytes: bytes) -> str:
         doc = docx.Document(io.BytesIO(file_bytes))
-        text = "\n".join(p.text for p in doc.paragraphs)
-        return text
+        text_parts = []
+
+        for para in doc.paragraphs:
+            text_parts.append(para.text)
+
+        # Hyperlink handling (simple heuristic)
+        for rel in doc.part.rels.values():
+            if "hyperlink" in rel.reltype:
+                link = rel.target_ref
+                if link not in "\n".join(text_parts):
+                    text_parts.append(f"[LINK] {link}")
+
+        return "\n".join(text_parts)
