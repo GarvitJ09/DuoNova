@@ -1,4 +1,5 @@
 import io
+import re
 from typing import Union  
 import fitz   # from PyMuPDF
 import docx   # from python-docx
@@ -19,45 +20,75 @@ class FileExtractionService:
 
     @staticmethod
     def _extract_pdf(file_bytes: bytes) -> str:
-        """Extract PDF text with hyperlinks inline by mapping links to nearest words/lines."""
+        """Extract PDF text with improved formatting and structure preservation."""
         doc = fitz.open(stream=file_bytes, filetype="pdf")
         text_parts = []
 
-        for page in doc:
-            words = page.get_text("words")  # [x0, y0, x1, y1, "word", block, line, word_no]
-            links = [l for l in page.get_links() if l.get("uri")]
-            words_sorted = sorted(words, key=lambda w: (w[6], w[0]))  # sort by line, then x
+        for page_num, page in enumerate(doc):
+            # Try multiple extraction methods for best results
+            
+            # Method 1: Simple text extraction (most reliable)
+            simple_text = page.get_text()
+            
+            # Method 2: Block-based extraction for better structure
+            blocks = page.get_text("blocks")
+            block_text = []
+            for block in blocks:
+                if len(block) >= 5 and block[4].strip():  # block[4] is text content
+                    block_text.append(block[4].strip())
+            
+            # Choose the better extraction
+            if len(simple_text.strip()) > len(" ".join(block_text).strip()):
+                page_text = simple_text
+            else:
+                page_text = "\n".join(block_text)
+            
+            # Clean up the text
+            page_text = FileExtractionService._clean_text(page_text)
+            
+            if page_text.strip():
+                text_parts.append(page_text)
 
-            line_map = {}  # line_no -> [words...]
-            for w in words_sorted:
-                _, _, _, _, word, _, line_no, _ = w
-                line_map.setdefault(line_no, []).append(word)
+        final_text = "\n\n".join(text_parts)
+        return FileExtractionService._post_process_text(final_text)
 
-            # Build text lines
-            page_lines = {}
-            for line_no, ws in line_map.items():
-                page_lines[line_no] = " ".join(ws)
+    @staticmethod
+    def _clean_text(text: str) -> str:
+        """Clean and normalize extracted text."""
+        if not text:
+            return ""
+        
+        # Remove excessive whitespace
+        text = re.sub(r'\s+', ' ', text)
+        
+        # Fix broken words (common in PDF extraction)
+        text = re.sub(r'(\w)-\s+(\w)', r'\1\2', text)
+        
+        # Ensure proper line breaks for sections
+        text = re.sub(r'\s*(PROFILE|EXPERIENCE|EDUCATION|SKILLS|PROJECTS|ACHIEVEMENTS|CONTACT)\s*', r'\n\n\1\n', text, flags=re.IGNORECASE)
+        
+        return text.strip()
 
-            # Attach links to nearest line
-            for l in links:
-                uri = l["uri"]
-                lx1, ly1, lx2, ly2 = l["from"]
-
-                # Find words inside link bbox
-                linked_words = [w for w in words if lx1 <= w[0] <= lx2 and ly1 <= w[1] <= ly2]
-                if linked_words:
-                    line_no = linked_words[0][6]
-                    page_lines[line_no] += f" ({uri})"
-                else:
-                    # No word inside → attach to closest previous line
-                    closest_line = max(page_lines.keys())
-                    page_lines[closest_line] += f" ({uri})"
-
-            # Merge lines in order
-            ordered_text = "\n".join([page_lines[k] for k in sorted(page_lines.keys())])
-            text_parts.append(ordered_text)
-
-        return "\n".join(text_parts)
+    @staticmethod
+    def _post_process_text(text: str) -> str:
+        """Final post-processing of extracted text."""
+        if not text:
+            return ""
+        
+        # Split into lines and clean each line
+        lines = []
+        for line in text.split('\n'):
+            line = line.strip()
+            if line and len(line) > 1:  # Skip very short lines that are likely artifacts
+                lines.append(line)
+        
+        # Join with single newlines and normalize spacing
+        result = '\n'.join(lines)
+        
+        # Fix multiple consecutive newlines
+        result = re.sub(r'\n\s*\n\s*\n+', '\n\n', result)
+        
+        return result.strip()
 
     @staticmethod
     def _extract_docx(file_bytes: bytes) -> str:

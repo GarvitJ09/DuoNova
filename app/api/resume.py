@@ -386,6 +386,15 @@ async def upload_resume(
                 provider=selected_provider_str
             )
         
+        # Check if LLM returned an error response and trigger fallback if needed
+        if isinstance(resume_data, dict) and "error" in resume_data:
+            print(f"⚠️ LLM returned error response: {resume_data.get('error')}")
+            print("🔄 Triggering fallback text parsing...")
+            
+            # Use the fallback parser directly
+            resume_data = llm_service._fallback_text_parsing(raw_text)
+            print(f"✅ Fallback parser result: {list(resume_data.keys())}")
+        
         # Enhance with library-extracted email if available and LLM didn't find it
         if primary_email and not resume_data.get("personal_info", {}).get("email"):
             if "personal_info" not in resume_data:
